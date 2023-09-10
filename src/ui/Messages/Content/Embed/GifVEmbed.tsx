@@ -1,13 +1,16 @@
 import useSize from "@ui/Messages/Content/Attachment/useSize";
 import {MediaEmbedBase} from "@ui/Messages/Content/Embed/elements";
 import {Message_embeds} from "@generated";
+import { useContext } from "react";
+import { ScrollerWidthContext } from "@ui/Messages";
 
 export interface GifVEmbedProps {
   embed: Message_embeds;
 }
 
 function GifVEmbed({embed}: GifVEmbedProps) {
-  const size = useSize(embed.video.width, embed.video.height);
+  const scrollerWidth = useContext(ScrollerWidthContext)
+  const size = useSize(embed.thumbnail.width, embed.thumbnail.height, undefined, scrollerWidth ? scrollerWidth - 134 : undefined);
 
   return (
     <video

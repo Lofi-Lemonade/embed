@@ -1,9 +1,10 @@
 import {Embed_thumbnail, Embed_video} from "@generated";
 import {VideoIframe, VideoThumbnail} from "@ui/Messages/Content/Embed/elements";
 import VideoAttachment from "@ui/Messages/Content/Attachment/VideoAttachment";
-import {ReactNode, useState} from "react";
+import {ReactNode, useContext, useState} from "react";
 import useSize from "@ui/Messages/Content/Attachment/useSize";
 import DiscordImageFailure from "@images/discordAssets/discord-image-failure.svg";
+import { ScrollerWidthContext } from "@ui/Messages";
 
 interface ThumbnailWrapperProps {
   thumbnail?: Embed_thumbnail["url"];
@@ -16,8 +17,6 @@ function ThumbnailWrapper({ thumbnail, width, height, children }: ThumbnailWrapp
   const [hideThumbnail, setHideThumbnail] = useState(false);
   const [error, setError] = useState(false);
 
-  const { width: adjustedWidth, height: adjustedHeight } = useSize(width, height);
-
   if (!thumbnail || hideThumbnail)
     return <>{children}</>;
 
@@ -26,10 +25,7 @@ function ThumbnailWrapper({ thumbnail, width, height, children }: ThumbnailWrapp
       onClick={() => setHideThumbnail(true)}
       src={error ? DiscordImageFailure : thumbnail}
       onError={() => setError(true)}
-      style={{
-        width: adjustedWidth,
-        height: adjustedHeight,
-      }}
+      style={{ width, height }}
     />
   );
 }
@@ -41,13 +37,16 @@ interface EmbedVideoProps extends Pick<Embed_video, "width" | "height"> {
 }
 
 function EmbedVideo(props: EmbedVideoProps) {
+  const scrollerWidth = useContext(ScrollerWidthContext)
+  const { width, height } = useSize(props.width, props.height, undefined, scrollerWidth ? scrollerWidth - 166 : undefined);
+
   if (props.proxyUrl !== null)
     return (
-      <ThumbnailWrapper thumbnail={props.thumbnail} width={props.width} height={props.height}>
+      <ThumbnailWrapper thumbnail={props.thumbnail} width={width} height={height}>
         <VideoAttachment
           attachmentOrEmbed={{
-            width: props.width,
-            height: props.height,
+            width,
+            height,
             url: props.proxyUrl,
           }}
         />
@@ -59,10 +58,10 @@ function EmbedVideo(props: EmbedVideoProps) {
   url.searchParams.set("auto_play", "1");
 
   return (
-    <ThumbnailWrapper thumbnail={props.thumbnail} width={props.width} height={props.height}>
+    <ThumbnailWrapper thumbnail={props.thumbnail} width={width} height={height}>
       <VideoIframe
-        width={400}
-        height={225}
+        width={width}
+        height={height}
         src={url.toString()}
         allowFullScreen={true}
       />

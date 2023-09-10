@@ -12,6 +12,8 @@ import useSize from "@ui/Messages/Content/Embed/useSize";
 import EmbedVideo from "@ui/Messages/Content/Embed/EmbedVideo";
 import { settingsStore } from "@store";
 import { store } from "@models";
+import { useContext, useEffect, useState } from "react";
+import { ScrollerWidthContext } from "@ui/Messages";
 
 export interface EmbedProps {
   embed: Message_embeds;
@@ -38,16 +40,20 @@ function Embed({embed, images}: EmbedProps) {
     ? numberToRgb(embed.color)
     : undefined;
 
+  const scrollerWidth = useContext(ScrollerWidthContext)
+
   const { width: widthImage, height: heightImage } = useSize(
     embed.type,
     embed.image,
-    images?.length > 0
+    images?.length > 0,
+    scrollerWidth ? scrollerWidth - 166 : undefined
   );
 
   const { width: widthThumbnail, height: heightThumbnail, isLarge: isThumbnailLarge } = useSize(
     embed.type,
     embed.thumbnail,
-    undefined
+    undefined,
+    scrollerWidth ? scrollerWidth - 166 : undefined
   );
 
   return (

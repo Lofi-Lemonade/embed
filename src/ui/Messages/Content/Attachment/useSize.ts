@@ -1,7 +1,7 @@
 const MaxAttachmentWidth = 400;
 const MaxAttachmentHeight = 300;
 
-function useSize(width: number, height: number, disabled?: boolean) {
+function useSize(width: number, height: number, disabled?: boolean, maxWidth?: number) {
   if (disabled) {
     return {
       width: undefined,
@@ -13,7 +13,8 @@ function useSize(width: number, height: number, disabled?: boolean) {
     Math.floor(
       Math.min(height, MaxAttachmentHeight) / height * width
     ),
-    MaxAttachmentWidth
+    MaxAttachmentWidth,
+    maxWidth || MaxAttachmentWidth
   );
   const resultingHeight = Math.min(
     height,

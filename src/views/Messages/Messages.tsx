@@ -139,6 +139,7 @@ export const Messages = observer(({ guild, channel, thread = false }: MessagesPr
                                     messages={groupedMessages[index]}
                                     style={style}
                                     thread={thread}
+                                    scrollerWidth={width}
                                   />
                                 </CellMeasurer>
                             ) : null
