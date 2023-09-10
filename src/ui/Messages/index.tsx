@@ -24,7 +24,7 @@ function MessageGroup(props: MessageProps) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <Message isFirstMessage={true} message={firstMessage} isHovered={isHovered} showButtons={props.showButtons ?? true} thread={props.thread} />
+        <Message isFirstMessage message={firstMessage} isHovered={isHovered} showButtons={props.showButtons ?? true} thread={props.thread} />
         {otherMessages.map(message => (
           <Message key={message.id} message={message} showButtons={props.showButtons ?? true} thread={props.thread} />
         ))}

@@ -14,7 +14,7 @@ function useSize(width: number, height: number, disabled?: boolean, maxWidth?: n
       Math.min(height, MaxAttachmentHeight) / height * width
     ),
     MaxAttachmentWidth,
-    maxWidth || MaxAttachmentWidth
+    maxWidth ?? MaxAttachmentWidth
   );
   const resultingHeight = Math.min(
     height,
