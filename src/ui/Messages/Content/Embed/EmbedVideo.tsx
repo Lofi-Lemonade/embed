@@ -5,6 +5,7 @@ import {ReactNode, useContext, useState} from "react";
 import useSize from "@ui/Messages/Content/Attachment/useSize";
 import DiscordImageFailure from "@images/discordAssets/discord-image-failure.svg";
 import { ScrollerWidthContext } from "@ui/Messages";
+import { EmbedMediaSpacing } from "..";
 
 interface ThumbnailWrapperProps {
   thumbnail?: Embed_thumbnail["url"];
@@ -38,7 +39,7 @@ interface EmbedVideoProps extends Pick<Embed_video, "width" | "height"> {
 
 function EmbedVideo(props: EmbedVideoProps) {
   const scrollerWidth = useContext(ScrollerWidthContext)
-  const { width, height } = useSize(props.width, props.height, undefined, scrollerWidth ? scrollerWidth - 166 : undefined);
+  const { width, height } = useSize(props.width, props.height, undefined, scrollerWidth ? scrollerWidth - EmbedMediaSpacing : undefined);
 
   if (props.proxyUrl !== null)
     return (

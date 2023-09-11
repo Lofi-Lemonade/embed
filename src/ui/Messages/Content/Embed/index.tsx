@@ -14,6 +14,7 @@ import { settingsStore } from "@store";
 import { store } from "@models";
 import { useContext, useEffect, useState } from "react";
 import { ScrollerWidthContext } from "@ui/Messages";
+import { EmbedMediaSpacing } from "..";
 
 export interface EmbedProps {
   embed: Message_embeds;
@@ -46,14 +47,14 @@ function Embed({embed, images}: EmbedProps) {
     embed.type,
     embed.image,
     images?.length > 0,
-    scrollerWidth ? scrollerWidth - 166 : undefined
+    scrollerWidth ? scrollerWidth - EmbedMediaSpacing : undefined
   );
 
   const { width: widthThumbnail, height: heightThumbnail, isLarge: isThumbnailLarge } = useSize(
     embed.type,
     embed.thumbnail,
     undefined,
-    scrollerWidth ? scrollerWidth - 166 : undefined
+    scrollerWidth ? scrollerWidth - EmbedMediaSpacing : undefined
   );
 
   return (

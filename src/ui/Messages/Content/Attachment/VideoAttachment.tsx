@@ -9,6 +9,7 @@ import fileSize from "filesize";
 import useSize from "@ui/Messages/Content/Attachment/useSize";
 import { useContext } from "react";
 import { ScrollerWidthContext } from "@ui/Messages";
+import { FullWidthSpacing } from "..";
 
 interface VideoAttachmentProps {
   attachmentOrEmbed: Message_attachments | Message_embeds | {
@@ -65,7 +66,7 @@ function VideoAttachment(props: VideoAttachmentProps) {
   const {width: extractedWidth, height: extractedHeight} = "width" in props.attachmentOrEmbed ? props.attachmentOrEmbed : props.attachmentOrEmbed.video;
 
   const scrollerWidth = useContext(ScrollerWidthContext)
-  const { width, height } = useSize(extractedWidth, extractedHeight, isFullscreen, scrollerWidth ? scrollerWidth - 134 : undefined);
+  const { width, height } = useSize(extractedWidth, extractedHeight, isFullscreen, scrollerWidth ? scrollerWidth - FullWidthSpacing : undefined);
 
   const fullScreenChange = () => {
     setIsFullscreen(document.fullscreenElement !== null);
