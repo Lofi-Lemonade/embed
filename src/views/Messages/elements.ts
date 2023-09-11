@@ -25,6 +25,7 @@ export const MessageList = styled(AutoSizer)``
 
 export const MessagesWrapper = styled.div<MessagesWrapperProps>`
   flex-grow: 1;
+  position: relative;
 
   ${MessageList} {
     transition: opacity 0.2s ease;

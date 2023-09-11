@@ -11253,6 +11253,11 @@ react-proxy@^1.1.7:
     lodash "^4.6.1"
     react-deep-force-update "^1.0.0"
 
+react-resize-aware@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-resize-aware/-/react-resize-aware-3.1.1.tgz#a428fd53f34dec3a52b68c923a6ebe51a192c63c"
+  integrity sha512-M8IyVLBN8D6tEUss+bxQlWte3ZYtNEGhg7rBxtCVG8yEBjUlZwUo5EFLq6tnvTZXcgAbCLjsQn+NCoTJKumRYg==
+
 react-router-dom@^6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.3.0.tgz#a0216da813454e521905b5fa55e0e5176123f43d"
