@@ -2,7 +2,7 @@ import useSize from "@ui/Messages/Content/Attachment/useSize";
 import {MediaEmbedBase} from "@ui/Messages/Content/Embed/elements";
 import {Message_embeds} from "@generated";
 import { useContext } from "react";
-import { ScrollerWidthContext } from "@ui/Messages";
+import { ScrollerWidthContext } from "@views/Messages/Messages";
 import { FullWidthSpacing } from "..";
 
 export interface GifVEmbedProps {

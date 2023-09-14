@@ -13,7 +13,7 @@ import EmbedVideo from "@ui/Messages/Content/Embed/EmbedVideo";
 import { settingsStore } from "@store";
 import { store } from "@models";
 import { useContext, useEffect, useState } from "react";
-import { ScrollerWidthContext } from "@ui/Messages";
+import { ScrollerWidthContext } from "@views/Messages/Messages";
 import { EmbedMediaSpacing } from "..";
 
 export interface EmbedProps {

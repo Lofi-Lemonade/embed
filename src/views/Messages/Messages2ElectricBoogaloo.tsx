@@ -10,6 +10,7 @@ import {MessagesWrapper, ScrollerSpacer} from "@views/Messages/elements";
 import { Virtuoso } from "react-virtuoso";
 import MessageGroup from "@ui/Messages";
 import useResizeAware from 'react-resize-aware';
+import { ScrollerWidthContext } from "@views/Messages/Messages";
 
 const maxMessagesToLoad = 30;
 
@@ -63,28 +64,30 @@ function Messages2ElectricBoogaloo({ guild, channel, thread = false }: MessagesP
   return (
     <MessagesWrapper stale={stale}>
       {resizeListener}
-      <Virtuoso
-        data={groupedMessages}
-        firstItemIndex={firstItemIndex}
-        overscan={100}
-        startReached={loadMoreMessages}
-        initialTopMostItemIndex={maxMessagesToLoad - 1}
-        alignToBottom={true}
-        followOutput={(isAtBottom: boolean) => {
-          if (isAtBottom) {
-            return 'auto' // can be 'auto' or false to avoid scrolling
-          }
+      <ScrollerWidthContext.Provider value={sizes.width}>
+        <Virtuoso
+          data={groupedMessages}
+          firstItemIndex={firstItemIndex}
+          overscan={100}
+          startReached={loadMoreMessages}
+          initialTopMostItemIndex={maxMessagesToLoad - 1}
+          alignToBottom={true}
+          followOutput={(isAtBottom: boolean) => {
+            if (isAtBottom) {
+              return 'auto' // can be 'auto' or false to avoid scrolling
+            }
 
-          return false;
-        }}
-        atBottomThreshold={2}
-        components={{
-          Footer: () => <ScrollerSpacer />,
-        }}
-        itemContent={(index, messageGroup) => (
-          <MessageGroup messages={messageGroup} key={messageGroup[0].id} thread={thread} scrollerWidth={sizes.width} />
-        )}
-      />
+            return false;
+          }}
+          atBottomThreshold={2}
+          components={{
+            Footer: () => <ScrollerSpacer />,
+          }}
+          itemContent={(index, messageGroup) => (
+            <MessageGroup messages={messageGroup} key={messageGroup[0].id} thread={thread} />
+          )}
+        />
+      </ScrollerWidthContext.Provider>
     </MessagesWrapper>
   );
 }

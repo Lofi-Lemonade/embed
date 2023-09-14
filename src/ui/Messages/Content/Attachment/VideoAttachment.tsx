@@ -8,7 +8,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import fileSize from "filesize";
 import useSize from "@ui/Messages/Content/Attachment/useSize";
 import { useContext } from "react";
-import { ScrollerWidthContext } from "@ui/Messages";
+import { ScrollerWidthContext } from "@views/Messages/Messages";
 import { FullWidthSpacing } from "..";
 
 interface VideoAttachmentProps {

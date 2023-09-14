@@ -4,7 +4,7 @@ import VideoAttachment from "@ui/Messages/Content/Attachment/VideoAttachment";
 import {ReactNode, useContext, useState} from "react";
 import useSize from "@ui/Messages/Content/Attachment/useSize";
 import DiscordImageFailure from "@images/discordAssets/discord-image-failure.svg";
-import { ScrollerWidthContext } from "@ui/Messages";
+import { ScrollerWidthContext } from "@views/Messages/Messages";
 import { EmbedMediaSpacing } from "..";
 
 interface ThumbnailWrapperProps {

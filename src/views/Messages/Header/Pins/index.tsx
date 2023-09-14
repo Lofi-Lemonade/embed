@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { PinButton, Display, Title, List, Pin, NoPins } from './elements'
 import noPins from '@images/discordAssets/ef3a1ed683cfcf029971b12a26462072.svg'
 import Tooltip from 'rc-tooltip'
-import { ScrollerWidthContext } from '@ui/Messages';
+import { ScrollerWidthContext } from "@views/Messages/Messages";
 import useResizeAware from 'react-resize-aware';
 
 export default observer(() => {

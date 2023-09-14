@@ -13,12 +13,15 @@ import {Locale} from "@lib/Locale";
 import { addNotification } from "notify";
 import { generalStore } from "@store";
 import MessageGroup from "@ui/Messages";
+import { createContext } from "react";
 
 type MessagesProps = {
   guild: string;
   channel: string;
   thread?: boolean;
 };
+
+export const ScrollerWidthContext = createContext(null)
 
 export const Messages = observer(({ guild, channel, thread = false }: MessagesProps) => {
   const { messages, error, ready, stale, fetchMore } = useMessages(channel, guild, thread ? generalStore.activeThread.id : null);
@@ -74,84 +77,85 @@ export const Messages = observer(({ guild, channel, thread = false }: MessagesPr
           scroller.width = width;
 
           return (
-            <InfiniteLoader
-              isRowLoaded={({ index }) => {
-                const loadMore = [0].includes(index) ;
+            <ScrollerWidthContext.Provider value={width}>
+              <InfiniteLoader
+                isRowLoaded={({ index }) => {
+                  const loadMore = [0].includes(index) ;
 
-                if (loadMore) {
-                  if (scroller.readyToLoadMore) return false;
-                  scroller.readyToLoadMore = true;
-                }
+                  if (loadMore) {
+                    if (scroller.readyToLoadMore) return false;
+                    scroller.readyToLoadMore = true;
+                  }
 
-                return true;
-              }}
-              loadMoreRows={async () => {
-                if (scroller.isLoadingMore) return;
+                  return true;
+                }}
+                loadMoreRows={async () => {
+                  if (scroller.isLoadingMore) return;
 
-                scroller.isLoadingMore = true;
-                await fetchMore();
-                scroller.isLoadingMore = false;
+                  scroller.isLoadingMore = true;
+                  await fetchMore();
+                  scroller.isLoadingMore = false;
 
-                // Clear the cache for the message at the top
-                // could be a message added into its group
-                cache.clear(2, 0);
-              }}
-              rowCount={Infinity}
-              threshold={1}
-            >
-              {({ onRowsRendered, registerChild }) => {
-                return (
-                    <Scroller
-                        width={width}
-                        height={height}
-                        onRowsRendered={(data) => {
-                          const diff = groupedMessages.length - scroller.count
-                          if (groupedMessages.length !== scroller.count) {
-                            if (scroller.count !== -1) {
-                              scroller.scrollToIndex = diff === 1
-                                ? groupedMessages.length
-                                : diff
+                  // Clear the cache for the message at the top
+                  // could be a message added into its group
+                  cache.clear(2, 0);
+                }}
+                rowCount={Infinity}
+                threshold={1}
+              >
+                {({ onRowsRendered, registerChild }) => {
+                  return (
+                      <Scroller
+                          width={width}
+                          height={height}
+                          onRowsRendered={(data) => {
+                            const diff = groupedMessages.length - scroller.count
+                            if (groupedMessages.length !== scroller.count) {
+                              if (scroller.count !== -1) {
+                                scroller.scrollToIndex = diff === 1
+                                  ? groupedMessages.length
+                                  : diff
+                              }
+
+                              scroller.count = groupedMessages.length
                             }
 
-                            scroller.count = groupedMessages.length
+                            onRowsRendered(data)
+                          }}
+                          willUnmount={() => {
+                            scroller.count = -1
+                            scroller.scrollToIndex = -1
+                            scroller.readyToLoadMore = false
+                            scroller.isLoadingMore = false
+                          }}
+                          listRef={registerChild}
+                          deferredMeasurementCache={cache}
+                          rowHeight={cache.rowHeight}
+                          rowRenderer={({ index, key, style, parent }) =>
+                              groupedMessages[index] ? (
+                                  <CellMeasurer
+                                      key={key}
+                                      cache={cache}
+                                      parent={parent}
+                                      rowIndex={index}
+                                  >
+                                    <MessageGroup
+                                      messages={groupedMessages[index]}
+                                      style={style}
+                                      thread={thread}
+                                    />
+                                  </CellMeasurer>
+                              ) : null
                           }
-
-                          onRowsRendered(data)
-                        }}
-                        willUnmount={() => {
-                          scroller.count = -1
-                          scroller.scrollToIndex = -1
-                          scroller.readyToLoadMore = false
-                          scroller.isLoadingMore = false
-                        }}
-                        listRef={registerChild}
-                        deferredMeasurementCache={cache}
-                        rowHeight={cache.rowHeight}
-                        rowRenderer={({ index, key, style, parent }) =>
-                            groupedMessages[index] ? (
-                                <CellMeasurer
-                                    key={key}
-                                    cache={cache}
-                                    parent={parent}
-                                    rowIndex={index}
-                                >
-                                  <MessageGroup
-                                    messages={groupedMessages[index]}
-                                    style={style}
-                                    thread={thread}
-                                    scrollerWidth={width}
-                                  />
-                                </CellMeasurer>
-                            ) : null
-                        }
-                        rowCount={groupedMessages.length + 1}
-                        scrollToIndex={index}
-                        scrollToAlignment="start"
-                        overscanRowCount={0}
-                    />
-                )
-              }}
-            </InfiniteLoader>
+                          rowCount={groupedMessages.length + 1}
+                          scrollToIndex={index}
+                          scrollToAlignment="start"
+                          overscanRowCount={0}
+                      />
+                  )
+                }}
+              </InfiniteLoader>
+            </ScrollerWidthContext.Provider>
           );
         }}
       </MessageList>
