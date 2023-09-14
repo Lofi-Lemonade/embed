@@ -1,4 +1,4 @@
-import {CSSProperties, createContext, useState} from "react";
+import {CSSProperties, useState} from "react";
 import {Message as MessageData} from "@generated";
 import {MessageGroupBase} from "@ui/Messages/elements";
 import Message from "@ui/Messages/Message";
