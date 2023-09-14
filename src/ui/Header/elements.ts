@@ -19,6 +19,14 @@ export const Root = styled('header')`
 
 export const SingleChannel = styled('div')`
   ${({theme}) => theme.singleChannel ? null : 'display: none'}
+
+  @media (max-width: 520px) {
+    width: 47px;
+
+    &:hover {
+      width: auto;
+    }
+  }
 `
 
 export const Inner = styled('div')`
