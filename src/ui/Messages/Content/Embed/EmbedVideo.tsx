@@ -39,7 +39,8 @@ interface EmbedVideoProps extends Pick<Embed_video, "width" | "height"> {
 
 function EmbedVideo(props: EmbedVideoProps) {
   const scrollerWidth = useContext(ScrollerWidthContext)
-  const { width, height } = useSize(props.width, props.height, undefined, scrollerWidth ? scrollerWidth - EmbedMediaSpacing : undefined);
+  const maxWidth = scrollerWidth ? scrollerWidth - EmbedMediaSpacing : undefined;
+  const { width, height } = useSize(props.width, props.height, undefined, maxWidth);
 
   if (props.proxyUrl !== null)
     return (

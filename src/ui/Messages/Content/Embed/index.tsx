@@ -42,19 +42,20 @@ function Embed({embed, images}: EmbedProps) {
     : undefined;
 
   const scrollerWidth = useContext(ScrollerWidthContext)
+  const maxWidth = scrollerWidth ? scrollerWidth - EmbedMediaSpacing : undefined
 
   const { width: widthImage, height: heightImage } = useSize(
     embed.type,
     embed.image,
     images?.length > 0,
-    scrollerWidth ? scrollerWidth - EmbedMediaSpacing : undefined
+    maxWidth
   );
 
   const { width: widthThumbnail, height: heightThumbnail, isLarge: isThumbnailLarge } = useSize(
     embed.type,
     embed.thumbnail,
     undefined,
-    scrollerWidth ? scrollerWidth - EmbedMediaSpacing : undefined
+    maxWidth
   );
 
   return (

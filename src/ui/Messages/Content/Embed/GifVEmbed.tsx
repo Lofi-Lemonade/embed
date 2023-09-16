@@ -11,7 +11,8 @@ export interface GifVEmbedProps {
 
 function GifVEmbed({embed}: GifVEmbedProps) {
   const scrollerWidth = useContext(ScrollerWidthContext)
-  const size = useSize(embed.thumbnail.width, embed.thumbnail.height, undefined, scrollerWidth ? scrollerWidth - FullWidthSpacing : undefined);
+  const maxWidth = scrollerWidth ? scrollerWidth - FullWidthSpacing : undefined;
+  const size = useSize(embed.thumbnail.width, embed.thumbnail.height, undefined, maxWidth);
 
   return (
     <video

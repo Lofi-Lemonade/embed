@@ -66,7 +66,8 @@ function VideoAttachment(props: VideoAttachmentProps) {
   const {width: extractedWidth, height: extractedHeight} = "width" in props.attachmentOrEmbed ? props.attachmentOrEmbed : props.attachmentOrEmbed.video;
 
   const scrollerWidth = useContext(ScrollerWidthContext)
-  const { width, height } = useSize(extractedWidth, extractedHeight, isFullscreen, scrollerWidth ? scrollerWidth - FullWidthSpacing : undefined);
+  const maxWidth = scrollerWidth ? scrollerWidth - FullWidthSpacing : undefined;
+  const { width, height } = useSize(extractedWidth, extractedHeight, isFullscreen, maxWidth);
 
   const fullScreenChange = () => {
     setIsFullscreen(document.fullscreenElement !== null);
