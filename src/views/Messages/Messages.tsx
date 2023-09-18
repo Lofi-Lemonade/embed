@@ -21,7 +21,7 @@ type MessagesProps = {
   thread?: boolean;
 };
 
-export const ScrollerWidthContext = createContext(null)
+export const ScrollerWidthContext = createContext<number | null>(null)
 
 export const Messages = observer(({ guild, channel, thread = false }: MessagesProps) => {
   const { messages, error, ready, stale, fetchMore } = useMessages(channel, guild, thread ? generalStore.activeThread.id : null);
