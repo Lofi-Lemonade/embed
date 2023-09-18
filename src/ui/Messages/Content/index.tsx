@@ -32,6 +32,9 @@ import ThreadButton from "@ui/Messages/Content/Thread/ThreadButton";
 import Message from "../Message";
 import Embed from "@ui/Messages/Content/Embed";
 
+export const FullWidthSpacing = 134
+export const EmbedMediaSpacing = 166
+
 interface EditedProps {
   editedAt: number;
 }

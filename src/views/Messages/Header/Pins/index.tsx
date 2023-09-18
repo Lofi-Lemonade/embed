@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { PinButton, Display, Title, List, Pin, NoPins } from './elements'
 import noPins from '@images/discordAssets/ef3a1ed683cfcf029971b12a26462072.svg'
 import Tooltip from 'rc-tooltip'
+import { ScrollerWidthContext } from "@views/Messages/Messages";
+import useResizeAware from 'react-resize-aware';
 
 export default observer(() => {
     const [right, setRight] = useState(0)
@@ -35,6 +37,8 @@ export default observer(() => {
         }
     })
 
+    const [resizeListener, sizes] = useResizeAware();
+
     const pins = generalStore.pins
 
     return <>
@@ -45,20 +49,23 @@ export default observer(() => {
             <PinButton innerRef={ref => (button = ref)} onClick={() => generalStore.togglePins()} open={generalStore.pinsOpen} className="pin-button" x="0" y="0" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12L12.101 2.10101L10.686 3.51401L12.101 4.92901L7.15096 9.87801V9.88001L5.73596 8.46501L4.32196 9.88001L8.56496 14.122L2.90796 19.778L4.32196 21.192L9.97896 15.536L14.222 19.778L15.636 18.364L14.222 16.95L19.171 12H19.172L20.586 13.414L22 12Z"></path></PinButton>
         </Tooltip>
         {generalStore.pinsOpen && <Display right={right} innerRef={ref => (display = ref)} className="pin-display">
+            {resizeListener}
             <Title className="pin-title">Pinned Messages</Title>
-            <List className="pin-list">
-                {pins
-                    ? pins.length
-                        ? pins.map(pin => <Pin key={pin.id} className="pin">
-                            <Message isFirstMessage={true} message={pin} showButtons={false} />
-                        </Pin>)
-                        : <NoPins className="no-pins">
-                            <img src={noPins} alt="no pins" />
-                            <span>This channel doesn't have any <br /> pinned messages... yet.</span>
-                          </NoPins>
-                    : <div style={{ height: '300px' }}><Loading /></div>
-                }
-            </List>
+            <ScrollerWidthContext.Provider value={sizes.width}>
+                <List className="pin-list">
+                    {pins
+                        ? pins.length
+                            ? pins.map(pin => <Pin key={pin.id} className="pin">
+                                <Message isFirstMessage={true} message={pin} showButtons={false} />
+                            </Pin>)
+                            : <NoPins className="no-pins">
+                                <img src={noPins} alt="no pins" />
+                                <span>This channel doesn't have any <br /> pinned messages... yet.</span>
+                            </NoPins>
+                        : <div style={{ height: '300px' }}><Loading /></div>
+                    }
+                </List>
+            </ScrollerWidthContext.Provider>
         </Display>}
     </>
 })
