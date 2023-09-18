@@ -12,7 +12,8 @@ interface ImageAttachmentProps {
 
 function ImageAttachment(props: ImageAttachmentProps) {
   const scrollerWidth = useContext(ScrollerWidthContext)
-  const { width, height } = useSize(props.attachment.width, props.attachment.height, undefined, scrollerWidth ? scrollerWidth - FullWidthSpacing : undefined);
+  const maxWidth = scrollerWidth ? scrollerWidth - FullWidthSpacing : undefined;
+  const { width, height } = useSize(props.attachment.width, props.attachment.height, undefined, maxWidth);
 
   return (
     <ExpandableImage src={props.attachment.url} width={width} height={height} className={ImageAttachmentBase} />
