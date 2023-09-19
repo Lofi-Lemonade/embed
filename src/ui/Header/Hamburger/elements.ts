@@ -32,7 +32,7 @@ export const Ham = styled('button')<Props>`
   background: none;
   flex-shrink: 0;
   color: ${({ theme }) => theme.colors.accent};
-  display: ${({ theme }) => theme.singleChannel ? 'none' : 'inline-block'};
+  display: ${({ theme, thread }) => theme.singleChannel && !thread ? 'none' : 'inline-block'};
   margin-left: 20px;
   margin-right: 10px;
   position: relative;

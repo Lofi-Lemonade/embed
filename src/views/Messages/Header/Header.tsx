@@ -85,10 +85,11 @@ export const Header = observer(({ channel, thread }: HeaderProps) => {
             {thread || ['VoiceChannel', 'ForumChannel'].includes(cData.__typename) || <ThreadBrowser count={cData.threads?.length} />}
             {/* {(!thread || generalStore.threadFullscreen) && <Pins />} Thread pins are disabled */}
             {thread || ['VoiceChannel', 'ForumChannel'].includes(cData.__typename) || <Pins />}
-            <SingleChannelAuthWrapper>
-                <SingleChannelAuth />
-            </SingleChannelAuthWrapper>
-            {invite ? <Tooltip placement="bottom" overlay={Locale.translate('opendiscord.tooltip')}>
+            {(!thread || generalStore.threadFullscreen) && <>
+                <SingleChannelAuthWrapper>
+                    <SingleChannelAuth />
+                </SingleChannelAuthWrapper>
+                {invite ? <Tooltip placement="bottom" overlay={Locale.translate('opendiscord.tooltip')}>
                     <Join
                         className="join"
                         href={invite}
@@ -99,6 +100,7 @@ export const Header = observer(({ channel, thread }: HeaderProps) => {
                         {Locale.translate('opendiscord')}
                     </Join>
                 </Tooltip> : null}
+            </>}
 
           {thread && !generalStore.threadFullscreen && (
             // This is rancid, idk how to do this properly honestly

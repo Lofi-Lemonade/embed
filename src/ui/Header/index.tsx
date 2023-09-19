@@ -12,9 +12,11 @@ interface Props {
 
 const Header = observer(({ children, thread = false }: Props) => (
   <Root className="header">
-    <SingleChannel>
-      <ServerInfo />
-    </SingleChannel>
+    {(!thread || generalStore.threadFullscreen) && (
+      <SingleChannel>
+        <ServerInfo />
+      </SingleChannel>
+    )}
     <Inner>
       <Hamburger
         onClick={e => {
