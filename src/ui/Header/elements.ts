@@ -18,7 +18,7 @@ export const Root = styled('header')`
 `
 
 export const SingleChannel = styled('div')`
-  ${({theme}) => theme.singleChannel ? null : 'display: none'}
+  ${({theme}) => theme.singleChannel ? null : 'display: none;'}
 
   @media (max-width: 520px) {
     width: 47px;
