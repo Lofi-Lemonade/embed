@@ -4,7 +4,6 @@ import { observer } from 'mobx-react'
 import { useEffect } from 'react'
 import { List, Post, Preview, PostName, Footer, Root, Username, Separator, Divider, MessageCount, Time } from './elements'
 import stars from '@images/discordAssets/stars.svg'
-import Tooltip from 'rc-tooltip'
 import FORUM_POSTS from './ForumPosts.graphql'
 import { ForumPosts, ForumPostsVariables, ForumPosts_channel_ForumChannel as Forum, ForumPosts_channel_ForumChannel_threads_ThreadChannel as Thread } from '@generated';
 import Content from '@ui/Messages/Content';
@@ -30,6 +29,8 @@ enum SortOrder {
     CreationDate
 }
 
+const queryParams = new URLSearchParams(location.search)
+
 export default observer(({ guild, channel }: Props) => {
     const { data, loading, error } = useQuery<ForumPosts, ForumPostsVariables>(FORUM_POSTS, { variables: { guild, channel }, fetchPolicy: 'network-only'})
 
@@ -41,6 +42,26 @@ export default observer(({ guild, channel }: Props) => {
             autoDismiss: 0,
         })
     }, [error?.message])
+
+    useEffect(() => {
+        if (queryParams.has('thread')) {
+            const threads = data?.channel?.threads as Thread[]
+            if (threads) {
+                const thread = threads.find(t => t.id === queryParams.get('thread'))
+                if (thread) {
+                    generalStore.setActiveThread(thread)
+                    generalStore.setThreadFullscreen(true)
+                } else {
+                    addNotification({
+                        level: 'error',
+                        title: 'Could not find default thread',
+                        message: 'The thread does not exist or it has been archived',
+                        autoDismiss: 0,
+                    })
+                }
+            }
+        }
+    }, [data?.channel?.threads])
 
     const sortOrder = (data.channel as Forum)?.defaultSortOrder ?? SortOrder.LatestActivity
 
