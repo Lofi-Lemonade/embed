@@ -65,7 +65,7 @@ export default observer(({ count }: { count: number }) => {
     }, [error?.message])
 
     useEffect(() => {
-        if (queryParams.has('thread')) {
+        if (queryParams.has('thread') && !generalStore.openedDefaultThread) {
             const threads = data?.channel?.threads as Threads_channel_threads_ThreadChannel[]
             if (threads) {
                 const thread = threads.find(t => t.id === queryParams.get('thread'))
@@ -80,6 +80,7 @@ export default observer(({ count }: { count: number }) => {
                         autoDismiss: 0,
                     })
                 }
+                generalStore.setOpenedDefaultThread()
             }
         }
     }, [data?.channel?.threads])

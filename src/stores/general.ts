@@ -19,6 +19,7 @@ export class GeneralStore {
   @observable menuOpen: boolean = false;
   @observable activeThread?: Thread;
   @observable threadFullscreen: boolean = false;
+  @observable openedDefaultThread: boolean = false;
   @observable file?: File;
   @observable emojis = new EmojiStore(...defaultEmojis);
   @observable pins?: Message[];
@@ -64,6 +65,10 @@ export class GeneralStore {
     // TODO: Set activeThread to null - this is for testing
     this.activeThread = null;
     this.threadFullscreen = false;
+  }
+
+  @action setOpenedDefaultThread() {
+    this.openedDefaultThread = true;
   }
 
   @action setFile(file: File) {
