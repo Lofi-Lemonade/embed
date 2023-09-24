@@ -44,7 +44,7 @@ export default observer(({ guild, channel }: Props) => {
     }, [error?.message])
 
     useEffect(() => {
-        if (queryParams.has('thread')) {
+        if (queryParams.has('thread') && !generalStore.openedDefaultThread) {
             const threads = data?.channel?.threads as Thread[]
             if (threads) {
                 const thread = threads.find(t => t.id === queryParams.get('thread'))
@@ -59,6 +59,7 @@ export default observer(({ guild, channel }: Props) => {
                         autoDismiss: 0,
                     })
                 }
+                generalStore.setOpenedDefaultThread()
             }
         }
     }, [data?.channel?.threads])
