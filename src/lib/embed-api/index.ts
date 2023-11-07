@@ -31,13 +31,15 @@ api.on('sendMessage', data => {
     typeof data.message === 'string'
   ) {
     const { channel, message } = data
-    client.mutate({
-      mutation: SEND_MESSAGE,
-      variables: {
-        channel,
-        content: message
-      }
-    })
+    if (generalStore.guild?.channels.some(c => c.id === channel)) {
+      client.mutate({
+        mutation: SEND_MESSAGE,
+        variables: {
+          channel,
+          content: message
+        }
+      })
+    }
   }
 })
 
