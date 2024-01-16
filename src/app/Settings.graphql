@@ -2,6 +2,7 @@ query Settings($guild: String!) {
   settings(id: $guild) {
     guestMode
     invite
+    inviteButtonText
     singleChannel
     hideSidebar
     readonly

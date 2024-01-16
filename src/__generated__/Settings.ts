@@ -24,6 +24,7 @@ export interface Settings_settings {
   __typename: "GuildSettings";
   guestMode: boolean;
   invite: string | null;
+  inviteButtonText: string | null;
   singleChannel: string | null;
   hideSidebar: boolean | null;
   readonly: boolean;

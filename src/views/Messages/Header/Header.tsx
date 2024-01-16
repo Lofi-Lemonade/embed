@@ -44,7 +44,7 @@ export const Header = observer(({ channel, thread }: HeaderProps) => {
         cData = {}
     }
 
-    const invite = generalStore.settings?.invite;
+    const { invite, inviteButtonText } = generalStore.settings ?? {};
     const threadData = thread && generalStore.activeThread;
 
     return (
@@ -97,7 +97,7 @@ export const Header = observer(({ channel, thread }: HeaderProps) => {
                         // TODO: Fix join button
                         // onClick={this.join}
                     >
-                        {Locale.translate('opendiscord')}
+                        {inviteButtonText ?? Locale.translate('opendiscord')}
                     </Join>
                 </Tooltip> : null}
             </>}
