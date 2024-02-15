@@ -17,7 +17,7 @@ const optimize = ({ width, height, url }) => {
 
   if (match) {
     const [, id1, id2, file, type] = match
-    const params = new URLSearchParams()
+    const params = new URL(url).searchParams
 
     params.set('height', `${Math.round(height * devicePixelRatio)}`)
     params.set('width', `${Math.round(width * devicePixelRatio)}`)
