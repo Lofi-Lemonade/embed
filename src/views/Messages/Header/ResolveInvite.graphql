@@ -1,0 +1,3 @@
+mutation ResolveInvite($guild: String!) {
+    resolveInvite(guild: $guild)
+}

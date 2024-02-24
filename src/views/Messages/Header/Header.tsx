@@ -27,7 +27,10 @@ import {observer} from "mobx-react";
 import {SingleChannelAuth} from '@ui/Sidebar/Panel'
 import {generalStore} from "@store";
 import Pins from './Pins'
-import ThreadBrowser from './ThreadBrowser'
+import ThreadBrowser from './ThreadBrowser';
+import RESOLVE_INVITE from './ResolveInvite.graphql';
+import { useMutation } from "react-apollo-hooks";
+import { ResolveInvite, ResolveInviteVariables } from "@generated";
 
 export interface HeaderProps {
   channel: string,
@@ -36,7 +39,7 @@ export interface HeaderProps {
   AuthStore?: AuthStore
 }
 
-export const Header = observer(({ channel, thread }: HeaderProps) => {
+export const Header = observer(({ guild, channel, thread }: HeaderProps) => {
     let cData;
     try {
         cData = generalStore.guild.channels.find(c => c.id === channel) || {};
@@ -46,6 +49,15 @@ export const Header = observer(({ channel, thread }: HeaderProps) => {
 
     const { invite, inviteButtonText } = generalStore.settings ?? {};
     const threadData = thread && generalStore.activeThread;
+
+    const resolveInviteMutation = useMutation<ResolveInvite, ResolveInviteVariables>(RESOLVE_INVITE);
+    const resolveInvite = async () => {
+        await resolveInviteMutation({
+            variables: {
+                guild
+            },
+        });
+    }
 
     return (
         <Root thread={thread}>
@@ -94,8 +106,7 @@ export const Header = observer(({ channel, thread }: HeaderProps) => {
                         className="join"
                         href={invite}
                         target="_blank"
-                        // TODO: Fix join button
-                        // onClick={this.join}
+                        onClick={() => resolveInvite()}
                     >
                         {inviteButtonText ?? Locale.translate('opendiscord')}
                     </Join>
