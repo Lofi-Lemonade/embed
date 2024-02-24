@@ -17,7 +17,6 @@ export const QuoteContainer = styled('div')`
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-}
 `
 
 export const QuoteBar = styled('div')`
@@ -25,6 +24,27 @@ export const QuoteBar = styled('div')`
   width: 4px;
   border-radius: 4px;
   background-color: rgba(255, 255, 255, .13);
+`
+
+const Heading = styled('p')`
+  margin: 16px 0 8px;
+  font-weight: 700;
+  
+  &:first-child {
+    margin-top: 8px;
+  }
+`
+
+export const Heading1 = styled(Heading)`
+  font-size: 24px;
+`
+
+export const Heading2 = styled(Heading)`
+  font-size: 20px;
+`
+
+export const Heading3 = styled(Heading)`
+  font-size: 16px;
 `
 
 export const Quote = styled('blockquote')`

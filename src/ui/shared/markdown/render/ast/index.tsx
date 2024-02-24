@@ -62,6 +62,12 @@ const baseRules = {
     // https://github.com/discordjs/discord-api-types/blob/638c347dd8a1c5dc39b3626c76749c5f8a4afc6a/globals.ts#L69
     match: inlineRegex(/^<t:(?<timestamp>-?\d{1,13})(:(?<style>[tTdDfFR]))?>/),
     parse: ({groups}) => groups
+  },
+
+  command: {
+    order: defaultRules.u.order,
+    match: inlineRegex(/^<\/(.+?):\d{17,19}?>/),
+    parse: capture => ({ name: capture[1] })
   }
 }
 

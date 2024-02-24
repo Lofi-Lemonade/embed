@@ -1,5 +1,4 @@
 import {cx} from 'emotion'
-import {Route} from 'react-router-dom'
 import {Query} from 'react-apollo'
 
 import RoleLink from './link'
@@ -15,21 +14,13 @@ interface Props {
 }
 
 const Role = ({ id, children, className, data }: Props) => (
-  <Route path="/:server">
-    {({
-      match: {
-        params: { server }
-      }
-    }) => (
-        <RoleLink id={id} className={cx('role-link', className)}>
-          {children({
-            __typename: 'Member',
-            displayName: data?.name || generalStore.guild?.roles.find(r => r.id === id)?.name || 'deleted-role',
-            id: id
-          })}
-        </RoleLink>
-    )}
-  </Route>
+  <RoleLink id={id} className={cx('role-link', className)}>
+    {children({
+      __typename: 'Member',
+      displayName: data?.name || generalStore.guild?.roles.find(r => r.id === id)?.name || 'deleted-role',
+      id: id
+    })}
+  </RoleLink>
 )
 
 export default Role

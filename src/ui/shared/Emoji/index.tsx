@@ -4,7 +4,7 @@ import memoize from 'memoizee'
 import * as React from 'react'
 import emoji from 'react-easy-emoji'
 import { Base, Emote } from '@ui/shared/Emoji/elements'
-import { emojis } from '@services/Emoji'
+import { generalStore } from '@store'
 import Tooltip from 'rc-tooltip'
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
   resolveNames?: boolean
   onlyEmojiClassName?: string
   src?: string
-  reaction?: boolean
+  disableTooltip?: boolean
 }
 
 class Emoji extends React.PureComponent<Props> {
@@ -27,7 +27,7 @@ class Emoji extends React.PureComponent<Props> {
 
   render() {
     let text = this.getText()
-    let { className, resolveNames, src, reaction } = this.props
+    let { className, resolveNames, src, disableTooltip } = this.props
 
     // Return a custom emoji
     if (src) return <Emote src={src} className={cx('emoji', className)} />
@@ -45,19 +45,19 @@ class Emoji extends React.PureComponent<Props> {
     if (resolveNames) text = this.resolve(text)
 
     const resolved = emoji(text, (code, string, key) => {
-      const emoji = emojis.get(string)
+      let emoji = generalStore.emojis.get(string)
 
       const emote = (
         <Emote
           innerRef={this.handleErrors}
-          src={`https://twemoji.maxcdn.com/2/svg/${code + '.svg'}`}
+          src={`https://cdn.jsdelivr.net/gh/twitter/twemoji/assets/svg/${code}.svg`}
           alt={string}
           className={cx('emoji', className)}
           key={key}
         />
       )
 
-      return emoji && !reaction ? (
+      return emoji && !disableTooltip ? (
         <Tooltip
           key={key}
           placement="top"
@@ -72,7 +72,7 @@ class Emoji extends React.PureComponent<Props> {
       )
     })
 
-    return this.jumbofy(resolved)
+    return resolved // this.jumbofy(resolved)
   }
 
   getText() {
@@ -82,7 +82,7 @@ class Emoji extends React.PureComponent<Props> {
 
   resolve = memoize((text: string) => {
     const parsed = text.replace(/:([^\s:]+?):/g, (match, name) => {
-      const result = emojis.get(name)
+      const result = generalStore.emojis.get(name)
       return result ? result.emoji : match
     })
 
@@ -114,32 +114,32 @@ class Emoji extends React.PureComponent<Props> {
     }
   }
 
-  jumbofy(fragment: any[]) {
-    const { onlyEmojiClassName } = this.props
+  // jumbofy(fragment: any[]) {
+  //   const { onlyEmojiClassName } = this.props
 
-    if (onlyEmojiClassName) {
-      // Iterate through all fragment elements
-      // until a either the fragment is not an object
-      // and it's string contains characters other than
-      // a space (or line break)
-      const onlyEmoji = !fragment.find(
-        fragment => !(fragment instanceof Object || !/\S/.test(fragment))
-      )
+  //   if (onlyEmojiClassName) {
+  //     // Iterate through all fragment elements
+  //     // until a either the fragment is not an object
+  //     // and it's string contains characters other than
+  //     // a space (or line break)
+  //     const onlyEmoji = !fragment.find(
+  //       fragment => !(fragment instanceof Object || !/\S/.test(fragment))
+  //     )
 
-      if (onlyEmoji) {
-        return fragment.map(
-          piece =>
-            piece instanceof Object
-              ? React.cloneElement(piece, {
-                  className: cx(onlyEmojiClassName, piece.props.className)
-                })
-              : piece
-        )
-      }
-    }
+  //     if (onlyEmoji) {
+  //       return fragment.map(
+  //         piece =>
+  //           piece instanceof Object
+  //             ? React.cloneElement(piece, {
+  //                 className: cx(onlyEmojiClassName, piece.props.className)
+  //               })
+  //             : piece
+  //       )
+  //     }
+  //   }
 
-    return fragment
-  }
+  //   return fragment
+  // }
 }
 
 export default Emoji

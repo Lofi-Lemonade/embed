@@ -23,11 +23,16 @@ export interface MessagesWrapperProps {
 
 export const MessageList = styled(AutoSizer)``
 
-export const MessagesWrapper = styled('div')<MessagesWrapperProps>`
+export const MessagesWrapper = styled.div<MessagesWrapperProps>`
   flex-grow: 1;
+  position: relative;
 
   ${MessageList} {
     transition: opacity 0.2s ease;
     opacity: ${({ stale }) => (stale ? 0.4 : 1)};
   }
 `
+
+export const ScrollerSpacer = styled.div`
+  height: 24px;
+`;

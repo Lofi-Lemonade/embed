@@ -2,6 +2,8 @@ import styled, { css } from '@lib/emotion'
 
 interface Props {
   squashed: boolean
+  hideOnMobile: boolean;
+  threadFullscreen: boolean;
   onClick?: any
 }
 
@@ -27,19 +29,39 @@ export const Wrapper = styled('div')<Props>`
     opacity: 0;
   }
 
-  ${({ squashed, theme }) =>
+  ${({ hideOnMobile, squashed }) => 
+    hideOnMobile ? css`
+      max-width: ${ squashed ? '50%' : '60%'};
+      @media only screen and (max-width: 520px) {
+        display: none
+      }
+    ` : null
+  }
+  
+  ${({ threadFullscreen }) =>
+    !threadFullscreen ? css`
+      @media only screen and (min-width: 519px) {
+        border-left: 8px solid #202225;
+      }
+    ` : null
+  }
+  
+  ${({ squashed, threadFullscreen, theme }) =>
     squashed && !theme.singleChannel
       ? css`
-          @media (min-width: 521px) {
-            margin-left: 200px;
-            width: calc(100% - 200px);
-          }
-
-          @media (min-width: 521px) and (max-width: 400px),
-            (min-width: 521px) and (max-height: 340px) {
-            margin-left: 180px;
-            width: calc(100% - 180px);
-          }
+      
+      ${threadFullscreen ? css`
+        @media (min-width: 521px) {
+          margin-left: 200px;
+          width: calc(100% - 200px);
+        }
+      
+        @media (min-width: 521px) and (max-width: 400px),
+        (min-width: 521px) and (max-height: 340px) {  
+          margin-left: 180px;  
+          width: calc(100% - 180px);
+        }
+      ` : null};
 
           @media (max-width: 520px) {
             &::after {

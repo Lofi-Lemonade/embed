@@ -9,7 +9,7 @@ export * from 'react-emotion'
 export interface Theme extends Settings_settings_theme {
   readonly: boolean,
   guestMode: boolean,
-  singleChannel?: string,
+  singleChannel: boolean,
   colors: {
     __typename: 'ThemeColorSettings'
     _primary: Color
@@ -21,6 +21,7 @@ export interface Theme extends Settings_settings_theme {
     background: string
   }
   url: ParsedUrl
+  loadedSettings: boolean
 }
 
 export default styled as ThemedReactEmotionInterface<Theme>

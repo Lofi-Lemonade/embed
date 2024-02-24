@@ -1,0 +1,12 @@
+#import "./Embed.graphql"
+#import "./BaseSubscriptionMessage.graphql"
+
+# adds author.color for queries
+
+fragment BaseMessage on Message {
+    ...BaseSubscriptionMessage
+
+    author {
+        color
+    }
+}

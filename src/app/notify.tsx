@@ -15,14 +15,6 @@ export const addNotification = (
 
   notifications.forEach(n => {
     const notification = {
-      ...(/^warning|error$/.test(n.level) && {
-        action: {
-          label: Locale.translate('frontend.notif.supportserver'),
-          callback() {
-            window.open('https://widgetbot.io')
-          }
-        }
-      }),
       ...n,
       message:
         typeof n.message === 'string' ? n.message : JSON.stringify(n.message)
@@ -39,7 +31,7 @@ class Notify extends React.PureComponent {
 
   render() {
     return (
-      <Notifications>
+      <Notifications className="notifications">
         <N ref={ref => (this.notifications = ref)} />
       </Notifications>
     )

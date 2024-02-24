@@ -8,7 +8,7 @@ fragment Embed on Embed {
     author {
         url
         name
-        icon
+        proxyIconUrl
     }
     fields {
         value
@@ -17,6 +17,7 @@ fragment Embed on Embed {
     }
     image {
         url
+        proxyUrl
         width
         height
     }
@@ -25,17 +26,19 @@ fragment Embed on Embed {
         url
     }
     footer {
-        url
+        proxyIconUrl
         text
     }
     thumbnail {
         height
         width
         url
+        proxyUrl
     }
     video {
         height
         width
         url
+        proxyUrl
     }
 }

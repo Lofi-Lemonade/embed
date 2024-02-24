@@ -1,6 +1,7 @@
 #import "./Embed.graphql"
+#import "./BaseSubscriptionMessage.graphql"
 
-# SubscriptionMessage.graphql without isGuest
+# BaseSubscriptionMessage.graphql without isGuest and channelId, and with referencedMessage
 
 fragment UpdatedMessage on UpdatedMessage {
     id
@@ -11,17 +12,13 @@ fragment UpdatedMessage on UpdatedMessage {
     editedAt
 
     author {
-        avatar
+        avatarUrl
         bot
         discrim
         id
         flags
         name
-    }
-
-    reactions {
-        count
-        emojiName
+        roles
     }
 
     attachments {
@@ -43,7 +40,7 @@ fragment UpdatedMessage on UpdatedMessage {
         count
         emojiId
         emojiName
-        me
+        animated
     }
 
     messageReference {
@@ -53,55 +50,7 @@ fragment UpdatedMessage on UpdatedMessage {
     }
 
     referencedMessage {
-        id
-        content
-        type
-        flags
-        createdAt
-        editedAt
-        isGuest
-
-        author {
-            avatar
-            bot
-            discrim
-            color
-            id
-            flags
-            name
-        }
-
-        attachments {
-            size
-        }
-
-        stickers {
-            name
-        }
-
-        messageReference {
-            guildId
-        }
-
-        embeds {
-            type
-        }
-
-        mentions {
-            id
-            type
-            name
-        }
-
-        interaction {
-            name
-        }
-    }
-
-    application {
-        id
-        name
-        icon
+        ...BaseSubscriptionMessage
     }
 
     embeds {
@@ -120,7 +69,15 @@ fragment UpdatedMessage on UpdatedMessage {
             id
             username
             discriminator
-            avatar
+            avatarUrl
         }
+    }
+
+    thread {
+        id
+        name
+        archivedAt
+        locked
+        messageCount
     }
 }

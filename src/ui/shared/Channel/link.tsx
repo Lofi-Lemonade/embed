@@ -1,31 +1,28 @@
 import * as React from "react";
-import { Route, NavLink, NavLinkProps } from "react-router-dom";
+import { NavLink, NavLinkProps } from "react-router-dom";
 import { store } from "@models";
-import { StringChain } from "lodash";
+import { generalStore } from "@store";
 
 type Props = Partial<NavLinkProps> & {
   id: string;
   $ref?: any;
 };
 
-const toggle = () => window.innerWidth < 520 ? store.sidebar.toggle() : null
+const closeSidebar = () => window.innerWidth < 520 ? store.sidebar.close() : null
 
 class ChannelLink extends React.PureComponent<Props> {
   render() {
     const { id, $ref, children, className } = this.props;
     return (
-      <Route path="/:server">
-        {({ match }) => (
-          <NavLink
-            to={`/${match.params.server}/${id}`}
-            data-channel={id}
-            innerRef={$ref}
-            onClick={toggle}
-            children={children}
-            className={className}
-          />
-        )}
-      </Route>
+      <NavLink
+        to={`/channels/${generalStore.guild?.id}/${id}`}
+        data-channel={id}
+        ref={$ref}
+        onClick={closeSidebar}
+        children={children}
+        className={className}
+        style={{ textDecoration: 'unset'}}
+      />
     );
   }
 }

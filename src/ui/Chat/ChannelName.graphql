@@ -1,15 +1,9 @@
-query ChannelName($channel: String!) {
-  channel(id: $channel) {
+query ChannelName($guild: String!, $channel: String!) {
+  channel: channelV2(id: $channel, guild: $guild) {
     name
     id
-
-    ... on TextChannel {
-      nsfw
-      canSend
-    }
-#    ... on NewsChannel {
-#      nsfw
-#      canSend
-#    }
+    rateLimitPerUser
+    nsfw
+    canSend
   }
 }

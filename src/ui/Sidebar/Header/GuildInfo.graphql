@@ -17,30 +17,48 @@ query GuildInfo($guild: String!) {
             name
             id
             position
+            rateLimitPerUser
+            nsfw
+            canSend
+
+            category {
+                name
+                position
+            }
+
             ... on TextChannel {
                 topic
-                canSend
-                nsfw
-                category {
-                    name
-                    position
+                
+                threads {
+                    id
                 }
             }
-            #      ... on NewsChannel {
-            #        topic
-            #        canSend
-            #        nsfw
-            #        category {
-            #          name
-            #          position
-            #        }
-            #      }
+            ... on AnnouncementChannel {
+                topic
+
+                threads {
+                    id
+                }
+            }
+            ...on ForumChannel {
+                topic
+            }
         }
 
         roles {
             id
             name
+            position
             color
+            icon
+            unicodeEmoji
+        }
+
+        emojis {
+            id
+            name
+            animated
+            available
         }
     }
 }

@@ -1,0 +1,3 @@
+mutation DeleteMessage($id: String!, $channel: String!, $thread: String) {
+  deleteMessage(id: $id, channel: $channel, threadId: $thread)
+}

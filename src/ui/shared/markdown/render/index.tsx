@@ -1,16 +1,18 @@
 import memoize from 'memoizee'
 import * as R from 'ramda'
 import baseRules from '@ui/shared/markdown/render/ast'
-import { Code, Highlighter, Link, QuoteContainer, QuoteBar, Quote } from '@ui/shared/markdown/render/elements'
+import { Code, Highlighter, Link, QuoteContainer, QuoteBar, Quote, Heading1, Heading2, Heading3 } from '@ui/shared/markdown/render/elements'
 import {
   astToString,
   flattenAst,
   recurse
 } from '@ui/shared/markdown/render/util'
-import SimpleMarkdown from 'simple-markdown'
+import SimpleMarkdown, { defaultRules } from "simple-markdown";
 import TextSpoiler from "@ui/shared/markdown/render/elements/TextSpoiler";
 import { Message_author, Message_mentions } from '@generated'
 import { Timestamp } from './elements/Timestamp'
+import { store } from '@models'
+import { settingsStore } from '@store'
 
 function parserFor(rules: SimpleMarkdown.ReactRules, returnAst?) {
   const parser = SimpleMarkdown.parserFor(rules)
@@ -35,10 +37,47 @@ function parserFor(rules: SimpleMarkdown.ReactRules, returnAst?) {
 }
 
 function createRules(rule: { [key: string]: any }) {
-  const { paragraph, url, link, codeBlock, inlineCode, blockQuote, spoiler, timestamp } = rule
+  const { paragraph, url, link, codeBlock, inlineCode, blockQuote, spoiler, timestamp, command } = rule
 
   return {
     ...rule,
+    heading: {
+      ...defaultRules.heading,
+      match: (source, state) => {
+        const prevCaptureStr =
+          state.prevCapture === null ? "" : state.prevCapture[0];
+        const isStartOfLineCapture = /(?:^|\n)( *)$/.exec(prevCaptureStr);
+
+        if (isStartOfLineCapture) {
+          source = isStartOfLineCapture[1] + source;
+          return /^ *(#{1,3})([^\n]+?)(?:\n+|$)/.exec(source);
+        }
+
+        return null;
+      },
+      react(node, parse, state) {
+        switch (node.level) {
+          case 1:
+            return (
+              <Heading1 key={state.key} className="heading">
+                {parse(node.content, state)}
+              </Heading1>
+            );
+          case 2:
+            return (
+              <Heading2 key={state.key} className="heading">
+                {parse(node.content, state)}
+              </Heading2>
+            );
+          default:
+            return (
+              <Heading3 key={state.key} className="heading">
+                {parse(node.content, state)}
+              </Heading3>
+            );
+        }
+      },
+    },
     s: {
       order: rule.u.order,
       match: SimpleMarkdown.inlineRegex(/^~~([\s\S]+?)~~(?!_)/),
@@ -61,17 +100,26 @@ function createRules(rule: { [key: string]: any }) {
     },
     link: {
       ...link,
-      react: (node, recurseOutput, state) => (
-        <Link
-          title={node.title || astToString(node.content)}
+      react(node, recurseOutput, state) {
+        const url = SimpleMarkdown.sanitizeUrl(node.target)
+        const content = astToString(node.content)
+        const masked = url !== content
+
+        return <Link
+          title={masked ? `${node.title || content}\n\n(${url})` : url}
           href={SimpleMarkdown.sanitizeUrl(node.target)}
           target="_blank"
           rel="noreferrer"
           key={state.key}
+          onClick={e => {
+            if (!masked || !settingsStore.linkWarning) return
+            e.preventDefault()
+            store.modal.openLink(url)
+          }}
         >
           {recurseOutput(node.content, state)}
         </Link>
-      )
+      }
     },
     inlineCode: {
       ...inlineCode,
@@ -107,6 +155,10 @@ function createRules(rule: { [key: string]: any }) {
     timestamp: {
       ...timestamp,
       react: data => <Timestamp data={data}></Timestamp>
+    },
+    command: {
+      ...command,
+      react: ({ name }) => '/' + name
     }
   }
 }

@@ -1,4 +1,6 @@
+import { generalStore } from '@store'
 import autobind from 'autobind-decorator'
+import { observer } from 'mobx-react'
 import * as React from 'react'
 
 import { ICategory } from '../categorise'
@@ -11,6 +13,7 @@ interface Props {
   index: number
 }
 
+@observer
 class Category extends React.PureComponent<Props> {
   state = {
     open: true
@@ -36,8 +39,7 @@ class Category extends React.PureComponent<Props> {
         )}
 
         {category.channels.map(({ name, id, nsfw = false, __typename, pings = 0 /*unread*/ }, order) => {
-          // TODO: Implement unread
-          let unread = pings > 0;
+          const unread = generalStore.unreadChannels.has(id);
           const selected = activeChannel === id;
 
           return this.state.open || selected || unread ? (
@@ -48,7 +50,7 @@ class Category extends React.PureComponent<Props> {
                 id,
                 name,
                 order,
-                unread: unread || undefined,
+                unread,
                 selected,
                 nsfw,
                 pings

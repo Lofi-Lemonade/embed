@@ -9,43 +9,66 @@ import { addNotification } from 'notify';
 import {act} from "react-dom/test-utils";
 import {Locale} from "@lib/Locale";
 import {generalStore} from "@store/general";
+import api from "@lib/embed-api";
 
 interface DiscordUser {
   avatar: string
-  banned: boolean
-  bannedFrom: string[]
   discriminator: null
-  ipAddresses: string[]
-  provider: any
   username: string
   _id: string
 }
 
 interface GuestUser {
+  avatarUrl: string
+  id: string
+  provider: 'Guest'
   username: string
 }
 
-type User = DiscordUser | GuestUser;
+interface GuildUser {
+  avatarUrl: string
+  id: string
+  provider: 'Guild'
+  username: string
+}
+
+type User = DiscordUser | GuestUser | GuildUser;
+
+const queryParams = new URLSearchParams(location.search)
 
 const loginError = (msg: string) => addNotification({
-  level: 'warning',
-  title: Locale.translate('frontend.notif.login.unsuccessful'),
+  level: 'error',
+  title: Locale.translate('notif.login.unsuccessful'),
   message: msg.replace('GraphQL error: ', ''),
   autoDismiss: 0,
 });
 export class AuthStore {
-  @observable token = window.localStorage.getItem('token');
-  @observable locale = window.localStorage.getItem("locale") || "en";
+  @observable token: string;
+  @observable locale: string;
 
   @observable inProgress: boolean = false;
   @observable errors: string | undefined = undefined;
-  @observable user: User | null = JSON.parse(window.localStorage.getItem('user'));
+  @observable user: User | null;
 
   constructor() {
-    if (!localStorage.getItem('token')) {
-      this.logout();
-      generalStore.needsUpdate = true;
-      // localStorage.setItem('lastUpdate', version)
+    try {
+      this.token = window.localStorage.getItem('token');
+      this.locale = window.localStorage.getItem("locale") || "en";
+      try {
+        this.user = JSON.parse(window.localStorage.getItem('user'));
+        if (this.user) api.emit('alreadySignedIn', this.user)
+      } catch (e) {
+        this.logout();
+        generalStore.needsUpdate = true;
+      }
+
+      if (!this.token || !this.user) {
+        this.logout();
+        generalStore.needsUpdate = true;
+        // localStorage.setItem('lastUpdate', version)
+      }
+    } catch (e) {
+      console.log('WidgetBot: localStorage is inaccessible so auth is disabled')
     }
   }
 
@@ -56,27 +79,22 @@ export class AuthStore {
     this.locale = locale;
   }
 
+  @action async setToken(token: string) {
+    this.token = token;
+    window.localStorage.setItem("token", token);
+
+    await this.fetchDiscordUser();
+  }
+
   @action async fetchDiscordUser() {
     const { data } = await APIRequest(Endpoints.auth.fetchLatestProfile);
 
     window.localStorage.setItem('user', JSON.stringify(data));
     this.user = data;
 
+    api.emit('signIn', data)
+
     return data;
-  }
-
-  @action async setGuestUser(username: string) {
-    window.localStorage.setItem('user', JSON.stringify({
-      username
-    }));
-
-    this.user = {
-      username
-    };
-
-    return {
-      username
-    }
   }
 
   @action logout() {
@@ -85,6 +103,8 @@ export class AuthStore {
 
     this.user = undefined;
     this.token = undefined;
+
+    api.emit('signOut')
   }
 
   @action discordLogin() {
@@ -96,6 +116,12 @@ export class AuthStore {
       const y: number = screen.height / 2 - 700 / 2;
 
       const newWindow = window.open(`${API_URL}${Endpoints.auth.discord.split(' ')[1]}`, 'Login to WidgetBot with Discord!', `menubar=no,width=905,height=752,location=no,resizable=no,scrollbars=yes,status=no,left=${x},top=${y}`);
+
+      if (!newWindow) {
+        this.inProgress = false;
+        reject('Failed to open login popup');
+        return
+      }
 
       const timer = setInterval(() => {
         if ((newWindow as Window).closed) {
@@ -145,7 +171,10 @@ export class AuthStore {
       this.inProgress = true;
       this.errors = undefined;
 
-      const { data } = await APIRequest(Endpoints.auth.guest, {payload: {username}})
+      const { data } = await APIRequest(Endpoints.auth.guest, { payload: {
+        username,
+        avatar: queryParams.get('avatar')
+      } }).catch(error => error.response)
 
       switch (data.type) {
         case 'AUTH_SUCCESS': {
@@ -155,13 +184,55 @@ export class AuthStore {
           }
 
           localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
 
           this.token = data.token;
+          this.user = data.user;
           this.inProgress = false;
+
+          api.emit('signIn', data.user)
+
           return resolve();
         }
-        case 'AUTH_FAIL': {
-          console.log(data.error);
+        case 'AUTH_ERROR': {
+          loginError(data.message)
+          return reject(() => {})
+        }
+      }
+    })
+  }
+
+  @action guildLogin(guild: string, token: string) {
+    return new Promise<void>(async (resolve, reject) => {
+      this.inProgress = true;
+      this.errors = undefined;
+
+      const { data } = await APIRequest(Endpoints.auth.guild, {
+        payload: {
+          guild, token
+        }
+      }).catch(error => error.response)
+
+      switch (data.type) {
+        case 'AUTH_SUCCESS': {
+          if (!data.token) {
+            this.inProgress = false;
+            return reject(() => {});
+          }
+
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+
+          this.token = data.token;
+          this.user = data.user;
+          this.inProgress = false;
+
+          api.emit('signIn', data.user)
+
+          return resolve();
+        }
+        case 'AUTH_ERROR': {
+          loginError(data.message)
           return reject(() => {})
         }
       }

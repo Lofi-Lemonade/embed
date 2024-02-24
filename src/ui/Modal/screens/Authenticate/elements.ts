@@ -11,10 +11,14 @@ export const Root = styled(Content)<Props>`
   text-align: center;
   user-select: none;
   width: auto;
+  max-width: 100%;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%,-50%);
   transform: translate(-50%,-50%);
+  cursor: default;
+  max-height: 100%;
+  overflow: auto;
   ${({ loading }) =>
     loading
       ? css`
@@ -73,6 +77,7 @@ export const Input = styled('input')`
   border: 1px solid rgba(0, 0, 0, 0.3);
   outline: none;
   font-size: 16px;
+  transition: border-color .2s ease-in-out;
 
   background-color: rgba(0, 0, 0, 0.1);
   color: ${({ theme }) => theme.colors._primary.fade(0.1).string()};
@@ -122,4 +127,14 @@ export const Overlay = styled('div')`
   z-index: 100; /* Specify a stack order in case you're using a different order for other elements */
   cursor: pointer; /* Add a pointer on hover */
   background-color: rgba(0, 0, 0, 0.7);
+`
+
+export const LSText = styled.p`
+  margin: 8px 0;
+`
+
+export const XEye = styled.img`
+  height: 1.2rem;
+  width: 1.2rem;
+  vertical-align: bottom;
 `

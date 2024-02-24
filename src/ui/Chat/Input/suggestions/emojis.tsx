@@ -2,10 +2,11 @@ import * as React from 'react'
 
 import { Description, Icon, Info, Name } from '../elements'
 import { Suggestion } from '../types'
-import { Emoji, emojis } from '@services/Emoji'
+import { Emoji } from '@services/Emoji'
+import { generalStore } from '@store'
 
 const Emojis: Suggestion<Emoji> = {
-  getSuggestions: query => emojis.query(query),
+  getSuggestions: query => generalStore.emojis.query(query),
   extract: query =>
     query.length > 2 &&
     query[0] === ':' &&
@@ -15,7 +16,7 @@ const Emojis: Suggestion<Emoji> = {
   toString: ({ keywords: [keyword] }) => `:${keyword}:`,
 
   description: query => (
-    <Description>
+    <Description className="description">
       Emoji
       {query ? (
         <React.Fragment>
@@ -33,8 +34,8 @@ const Emojis: Suggestion<Emoji> = {
       ) : (
         <Icon>{emoji}</Icon>
       )}
-      <Name>{`:${keyword}:`}</Name>
-      <Info>{category}</Info>
+      <Name className="name">{`:${keyword}:`}</Name>
+      <Info className="info">{category}</Info>
     </React.Fragment>
   )
 }

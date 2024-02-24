@@ -37,7 +37,11 @@ export const Root = styled('div')<Props>`
               0px 6px 30px 5px rgba(0, 0, 0, 0.12);
             }
         `
-      : css`
+      : theme.singleChannel
+        ? css`
+          display: none;
+        `
+        : css`
           transform: translateX(-250px);
         `};
 
@@ -76,7 +80,7 @@ export const Close = styled('button')`
           cursor: pointer;
           transition: background-color 0.1s ease;
 
-          ${({theme}) => !!theme.singleChannel ? 'display: none' : null};
+          ${({theme}) => theme.singleChannel ? 'display: none' : null};
         
           &:hover,
           &:focus {

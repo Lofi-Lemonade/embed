@@ -16,7 +16,7 @@ const base = (inline: boolean, color: string, clickable: boolean) => css`
   text-decoration: none;
   cursor: pointer;
   font-weight: 500;
-  border-radius: 30px;
+  border-radius: 3px;
 
   ${inline
     ? css`
@@ -26,7 +26,7 @@ const base = (inline: boolean, color: string, clickable: boolean) => css`
         }
       `
     : css`
-        padding: 0 6px;
+        padding: 0 2px;
         background-color: ${Color(color).fade(color === THEME_COLOR_ACCENT ? .7 : .9).string()};
         color: ${color === THEME_COLOR_ACCENT ? Color('white').fade(.2).string() : color} !important;
         text-decoration: none !important;

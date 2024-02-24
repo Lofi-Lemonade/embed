@@ -1,42 +1,72 @@
+import { useEffect } from "react";
 import Modal from '@ui/Modal'
 import Sidebar from '@ui/Sidebar'
 import ChooseChannel from '@views/ChooseChannel'
 import { MessagesView } from '@views/Messages'
 import Notifications from 'notify'
-import { Redirect, Route, Switch } from 'react-router-dom'
 
+import { Navigate, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom'
 import { ThemeProvider } from './ThemeProvider'
 import { observer } from 'mobx-react'
-import { store } from '@models'
 import { useCacheLoaded } from '@hooks'
 import Authenticate from "@ui/Modal/screens/Authenticate";
 import {Locale} from "@lib/Locale";
+import { Loading } from '@ui/Overlays/Loading/elements'
+import { Main } from './elements'
+import Notification from "@ui/Overlays/Notification";
+import api from "embed-api";
 
 const App = observer(() => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const callback = (data: string | Record<string, string>) => {
+      if (typeof data === 'string') {
+        navigate(data);
+      } else if (data instanceof Object) {
+        if (!data.guild || !data.channel) throw new Error('Attempted to navigate without passing required data');
+
+        navigate(`channels/${data.guild}/${data.channel}`);
+      }
+    };
+
+    api.on('navigate', callback);
+    return () => api.removeListener('navigate', callback);
+  });
+
   const cacheLoaded = useCacheLoaded()
-  if (!cacheLoaded) return null
+  if (!cacheLoaded) return null;
 
   return (
     <Locale>
       <ThemeProvider>
-        <Switch>
-          <Route path="/:guild">
-            <Authenticate />
-            <Modal />
-            <Notifications />
-            <Sidebar />
-            <Switch>
-              <Route path="/:guild/:channel" component={MessagesView} />
-              <Route component={ChooseChannel} />
-            </Switch>
-          </Route>
+        <Notification>
+          <Routes>
+            <Route path="/channels/:guild" element={
+              <>
+                <Loading id="loading" />
+                <Authenticate />
+                <Modal />
+                <Notifications />
+                <Main>
+                  <Sidebar />
+                  <Outlet />
+                </Main>
+              </>
+            }>
+              <Route path=":channel" element={<MessagesView />} />
+              <Route path="" element={<ChooseChannel />} />
+            </Route>
 
-          <Redirect to="/299881420891881473" />
-        </Switch>
+            <Route path="*" element={<Navigate replace to="/channels/299881420891881473" />} />
+          </Routes>
+          </Notification>
       </ThemeProvider>
     </Locale>
   )
 });
+
+
 // class App extends React.PureComponent<
 //   ChildProps<RouteComponentProps<any>, Locale>
 // > {

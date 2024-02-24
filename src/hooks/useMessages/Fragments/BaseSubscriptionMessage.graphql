@@ -1,0 +1,83 @@
+#import "./Embed.graphql"
+
+# BaseMessage.graphql without author.color
+# Updates also need to be done in UpdatedMessage.graphql
+
+fragment BaseSubscriptionMessage on Message {
+    id
+    channelId
+    content
+    type
+    flags
+    createdAt
+    editedAt
+    isGuest
+
+    author {
+        avatarUrl
+        bot
+        discrim
+        id
+        flags
+        name
+        roles
+        system
+        isWebhook
+    }
+
+    attachments {
+        url
+        height
+        width
+        filename
+        size
+    }
+
+    stickers {
+        id
+        name
+        formatType
+        lottieData
+    }
+
+    reactions {
+        count
+        emojiId
+        emojiName
+        animated
+    }
+
+    messageReference {
+        guildId
+        channelId
+        messageId
+    }
+
+    embeds {
+        ...Embed
+    }
+
+    mentions {
+        id
+        type
+        name
+    }
+
+    interaction {
+        name
+        user {
+            id
+            username
+            discriminator
+            avatarUrl
+        }
+    }
+
+    thread {
+        id
+        name
+        archivedAt
+        locked
+        messageCount
+    }
+}

@@ -11,7 +11,7 @@ const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 const link = ApolloLink.from(
   [
-    apolloLogger,
+    (DEVELOPMENT || location.search.includes('apollo-log=true')) && apolloLogger,
     new RetryLink({
       attempts: {
         max: 300

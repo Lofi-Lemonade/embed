@@ -6,22 +6,13 @@ query Channels($guild: String!) {
       name
       id
       position
-      ... on TextChannel {
-        canSend
-        nsfw
-        category {
-          name
-          position
-        }
+      nsfw
+      canSend
+      
+      category {
+        name
+        position
       }
-#      ... on NewsChannel {
-#        canSend
-#        nsfw
-#        category {
-#          name
-#          position
-#        }
-#      }
     }
   }
 }

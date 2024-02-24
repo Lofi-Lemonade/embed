@@ -1,4 +1,4 @@
-import {ChannelLink, Hash, News, Store, NSFW, NSFWNews, Rules} from '@ui/shared/Channel'
+import {ChannelLink, Hash, News, Store, NSFW, NSFWNews, Rules, Voice, NSFWVoice, Forum, NSFWForum} from '@ui/shared/Channel'
 import styled, { css, keyframes } from '@lib/emotion'
 import { Twemoji } from '@ui/shared/Emoji/emoji'
 import Item from '@ui/SelectItem'
@@ -56,7 +56,7 @@ const icon = (hash: typeof Hash) => styled(hash)`
   flex-shrink: 0;
   opacity: 0.6;
   height: 100%;
-  width: 16px;
+  width: 20px;
   margin-right: 7px;
 `;
 
@@ -71,6 +71,14 @@ export const NSFWNewstag = icon(NSFWNews)
 export const Storetag = icon(Store)
 
 export const Rulestag = icon(Rules)
+
+export const Voicetag = icon(Voice)
+
+export const NSFWVoicetag = icon(NSFWVoice)
+
+export const Forumtag = icon(Forum)
+
+export const NSFWForumtag = icon(NSFWForum)
 
 export const Name = styled('div')`
   color: inherit;

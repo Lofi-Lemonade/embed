@@ -21,11 +21,11 @@ export function flattenAst(node, parent?) {
 export function astToString(node) {
   function inner(node, result = []) {
     if (Array.isArray(node)) {
-      node.forEach(subNode => astToString(subNode))
+      node.forEach(subNode => inner(subNode, result))
     } else if (typeof node.content === 'string') {
       result.push(node.content)
     } else if (node.content != null) {
-      astToString(node.content)
+      inner(node.content, result)
     }
 
     return result

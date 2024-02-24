@@ -21,6 +21,7 @@
       "@ui/*": ["src/ui/*"],
       "@models": ["src/models/index"],
       "@hooks": ["src/hooks/index"],
+      "@hooks/*": ["src/hooks/*"],
       "@views/*": ["src/views/*"],
       "@services/*": ["src/services/*"],
       "@generated": ["src/__generated__/index"],
@@ -31,7 +32,8 @@
       "notify": ["src/app/notify.tsx"],
       "locales": ["src/app/locales"],
       "locales/*": ["src/app/locales/*"],
-      "embed-api": ["src/lib/embed-api"]
+      "embed-api": ["src/lib/embed-api"],
+      "@images/*": ["src/app/res/images/*"]
     },
     "plugins": [
       {

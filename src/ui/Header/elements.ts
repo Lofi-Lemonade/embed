@@ -1,5 +1,5 @@
 import Button from '@ui/shared/button'
-import {Hash, NSFW, News, NSFWNews, Rules} from '@ui/shared/Channel'
+import { Hash, NSFW, News, NSFWNews, Rules, ThreadHash, Voice, NSFWVoice, Forum, NSFWForum } from '@ui/shared/Channel'
 import Markdown from '@ui/shared/markdown/render'
 import styled from '@lib/emotion'
 import { Twemoji } from '@ui/shared/Emoji/emoji'
@@ -11,22 +11,29 @@ export const Root = styled('header')`
   display: flex;
   flex-shrink: 0;
   z-index: 8;
-  line-height: 25px;
   background-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.1),
-    0px 4px 5px 0px rgba(0, 0, 0, 0.12), 0px 1px 10px 0px rgba(0, 0, 0, 0.09),
-    0 1px 0 rgba(0, 0, 0, 0.1), 0 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1),
+  0px 4px 5px 0px rgba(0, 0, 0, 0.12), 0px 1px 10px 0px rgba(0, 0, 0, 0.09),
+  0 1px 0 rgba(0, 0, 0, 0.1), 0 2px 0 rgba(0, 0, 0, 0.06);
 `
 
 export const SingleChannel = styled('div')`
-  ${({theme}) => theme.singleChannel ? null : 'display: none'}
+  ${({theme}) => theme.singleChannel ? null : 'display: none;'}
+
+  @media (max-width: 520px) {
+    width: 47px;
+
+    &:hover {
+      width: auto;
+    }
+  }
 `
 
 export const Inner = styled('div')`
   display: flex;
   flex-shrink: 1;
   flex-grow: 1;
-  max-width: 100%;
+  min-width: 0;
   height: 47px;
   padding: 10px 0;
   @media (max-width: 270px), (max-height: 300px) {
@@ -40,6 +47,7 @@ export const Stretch = styled('div')`
   flex-grow: 1;
   overflow: hidden;
   flex-shrink: 1;
+  width: 0;
 `
 
 const name = (hash: typeof Hash) => styled(hash)`
@@ -72,6 +80,8 @@ const name = (hash: typeof Hash) => styled(hash)`
 
 export const Name = name(Hash)
 
+export const ThreadName = name(ThreadHash)
+
 export const NewsName = name(News)
 
 export const NSFWName = name(NSFW)
@@ -80,6 +90,14 @@ export const NSFWNewsName = name(NSFWNews)
 
 export const RulesName = name(Rules)
 
+export const VoiceName = name(Voice)
+
+export const NSFWVoiceName = name(NSFWVoice)
+
+export const ForumName = name(Forum)
+
+export const NSFWForumName = name(NSFWForum)
+
 export const Emoji = styled(Twemoji)`
   width: 18px !important;
   height: 100% !important;
@@ -87,14 +105,25 @@ export const Emoji = styled(Twemoji)`
   vertical-align: -0.4em;
 `
 
-export const Topic = styled(Markdown.withComponent('div'))`
+export const TopicWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+`
+
+interface TopicProps {
+  clickable?: boolean
+}
+export const Topic = styled(Markdown.withComponent('div'))<TopicProps>`
   text-overflow: ellipsis;
   overflow: hidden;
-  cursor: pointer;
+  cursor: ${({clickable}) => clickable ? 'pointer' : 'default'};
   white-space: nowrap;
   font-size: 14px;
   font-weight: 500;
   padding: 0 15px;
+  display: block;
+  align-items: center;
   border-left: 1px solid
     ${({ theme }) => theme.colors._primary.fade(0.9).string()};
   color: ${({ theme }) => theme.colors._primary.fade(0.4).string()};
@@ -125,9 +154,22 @@ export const Join = styled(JoinLink)`
 `;
 
 export const SingleChannelAuthWrapper = styled('div')`
-  ${({theme}) => !!theme.singleChannel ? null : 'display: none'};
+  ${({theme}) => theme.singleChannel && !theme.readonly ? null : 'display: none'};
   margin-right: 10px;
   > a {
     display: block;
   }
 `
+
+export const Fullscreen = styled('svg')`
+  margin-right: 1rem;
+  cursor: pointer;
+  
+  path {
+    color: ${({theme}) => theme.colors._primary.fade(0.6).string()};
+  }
+
+  @media only screen and (max-width: 520px) {
+    display: none
+  }
+`;

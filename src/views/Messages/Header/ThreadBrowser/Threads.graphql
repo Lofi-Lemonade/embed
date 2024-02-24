@@ -1,0 +1,19 @@
+#import "@hooks/useMessages/Fragments/BaseMessage.graphql"
+
+query Threads($guild: String!, $channel: String!) {
+  channel: channelV2(id: $channel, guild: $guild) {
+    id
+    threads {
+      ...on ThreadChannel {
+        id
+        name
+        locked
+        messageBunch(limit: 1) {
+          messages {
+            ...BaseMessage
+          }
+        }
+      }
+    }
+  }
+}

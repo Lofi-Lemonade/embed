@@ -7,7 +7,6 @@ import { store } from '@models'
 import Hotkeys from 'react-hot-keys'
 
 import { Root } from './elements'
-import { useCacheLoaded } from '@hooks'
 
 const Modal = observer(() => {
   const Screen = Loadable({

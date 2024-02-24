@@ -3,7 +3,6 @@ import Tooltip from 'rc-tooltip'
 import Emoji from '@ui/shared/Emoji'
 
 import ChannelLink from './link'
-import CHANNEL_INFO from './ChannelInfo.graphql'
 import { Message_mentions } from '@generated'
 import { generalStore } from '@store'
 
@@ -20,7 +19,7 @@ interface Props {
   data?: Message_mentions
 }
 
-const getChannel = (id: string) => (generalStore.guild?.channels || generalStore.channels.flatMap(ctg => ctg.channels))?.find(c => c.id === id)
+export const getChannel = (id: string) => (generalStore.guild?.channels || generalStore.channels.flatMap(ctg => ctg.channels))?.find(c => c.id === id)
 
 const Channel = ({ id, children, className, data }: Props) => (
     <Tooltip

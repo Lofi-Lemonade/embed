@@ -1,0 +1,6 @@
+query ChannelType($guild: String!, $channel: String!) {
+  channel: channelV2(id: $channel, guild: $guild) {
+    id
+    # used to get __typename
+  }
+}

@@ -1,4 +1,4 @@
-import styled from '@ui/Message/ThemeContext'
+import styled from 'react-emotion'
 import Moment from 'moment'
 import Tooltip from 'rc-tooltip'
 

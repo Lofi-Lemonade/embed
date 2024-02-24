@@ -1,1 +1,1 @@
-{"__schema":{"types":[{"kind":"INTERFACE","name":"Channel","possibleTypes":[{"name":"TextChannel"}]}]}}
+{"__schema":{"types":[{"kind":"INTERFACE","name":"Action","possibleTypes":[{"name":"JoinMember"},{"name":"KickMember"}]},{"kind":"INTERFACE","name":"Channel","possibleTypes":[{"name":"AnnouncementChannel"},{"name":"ForumChannel"},{"name":"TextChannel"},{"name":"ThreadChannel"},{"name":"VoiceChannel"}]},{"kind":"INTERFACE","name":"Chat","possibleTypes":[{"name":"DirectChat"},{"name":"DirectGroupChat"}]}]}}

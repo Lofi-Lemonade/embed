@@ -1,0 +1,43 @@
+#import "./Fragments/Message.graphql"
+
+query MoreMessages(
+    $guild: String!
+    $channel: String!
+    $thread: String
+    $around: String
+    $before: String
+    $after: String
+    $limit: Int
+) {
+    channel: channelV2(id: $channel, guild: $guild) {
+        id
+        ... on TextChannel {
+            messageBunch(threadId: $thread, limit: $limit, after: $after, before: $before, around: $around) {
+                messages {
+                    ...Message
+                }
+            }
+        }
+        ... on AnnouncementChannel {
+            messageBunch(threadId: $thread, limit: $limit, after: $after, before: $before, around: $around) {
+                messages {
+                    ...Message
+                }
+            }
+        }
+        ... on VoiceChannel {
+            messageBunch(threadId: $thread, limit: $limit, after: $after, before: $before, around: $around) {
+                messages {
+                    ...Message
+                }
+            }
+        }
+        ... on ForumChannel {
+            messageBunch(threadId: $thread, limit: $limit, after: $after, before: $before, around: $around) {
+                messages {
+                    ...Message
+                }
+            }
+        }
+    }
+}

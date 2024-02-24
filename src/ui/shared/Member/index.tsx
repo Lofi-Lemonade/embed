@@ -1,5 +1,4 @@
 import { cx } from 'emotion'
-import { Route } from 'react-router-dom'
 import { Query } from 'react-apollo'
 
 import {MemberInfo, Message_author, Message_mentions} from '@generated'
@@ -14,22 +13,14 @@ interface Props {
 }
 
 const Member = ({ id, children, className, data }: Props) => (
-  <Route path="/:server">
-    {({
-      match: {
-        params: { server }
-      }
-    }) => (
-        <MemberLink id={id} className={cx('member-link', className)}>
-          {children({
-            __typename: 'User',
-            name: data?.name || id,
-            color: 0x0000ff,
-            id
-          })}
-        </MemberLink>
-    )}
-  </Route>
+  <MemberLink id={id} className={cx('member-link', className)}>
+    {children({
+      __typename: 'User',
+      name: data?.name || id,
+      color: 0x0000ff,
+      id
+    })}
+  </MemberLink>
 )
 
 export default Member

@@ -8,9 +8,10 @@
 // ====================================================
 
 export interface ChannelName_channel {
-  __typename: "TextChannel";
+  __typename: "AnnouncementChannel" | "ForumChannel" | "TextChannel" | "ThreadChannel" | "VoiceChannel";
   name: string;
   id: string;
+  rateLimitPerUser: number | null;
   nsfw: boolean;
   canSend: boolean;
 }
@@ -20,5 +21,6 @@ export interface ChannelName {
 }
 
 export interface ChannelNameVariables {
+  guild: string;
   channel: string;
 }

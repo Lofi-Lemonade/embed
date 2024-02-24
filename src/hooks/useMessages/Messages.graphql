@@ -1,23 +1,58 @@
 #import "./Fragments/Message.graphql"
 
 query Messages(
+    $guild: String!
     $channel: String!
+    $thread: String
     $around: String
     $before: String
     $after: String
     $limit: Int
 ) {
-    channel(id: $channel) {
+    channel: channelV2(id: $channel, guild: $guild) {
         id
         ... on TextChannel {
-            messages(limit: $limit, after: $after, before: $before, around: $around) {
-                ...Message
+            messageBunch(threadId: $thread, limit: $limit, after: $after, before: $before, around: $around) {
+                messages {
+                    ...Message
+                }
+
+                pinnedMessages {
+                    ...Message
+                }
             }
         }
-        #    ... on NewsChannel {
-        #      messages(limit: $limit, after: $after, before: $before, around: $around) {
-        #        ...Message
-        #      }
-        #    }
+        ... on AnnouncementChannel {
+            messageBunch(threadId: $thread, limit: $limit, after: $after, before: $before, around: $around) {
+                messages {
+                    ...Message
+                }
+
+                pinnedMessages {
+                    ...Message
+                }
+            }
+        }
+        ... on VoiceChannel {
+            messageBunch(threadId: $thread, limit: $limit, after: $after, before: $before, around: $around) {
+                messages {
+                    ...Message
+                }
+            }
+        }
+        ... on ForumChannel {
+            messageBunch(threadId: $thread, limit: $limit, after: $after, before: $before, around: $around) {
+                messages {
+                    ...Message
+                }
+            }
+        }
+        ... on ThreadChannel { # This is not currently used but it resolves type issues
+            messageBunch(threadId: $thread, limit: $limit, after: $after, before: $before, around: $around) {
+                messages {
+                    ...Message
+                }
+            }
+        }
     }
 }

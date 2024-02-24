@@ -2,21 +2,19 @@ import styled from '@lib/emotion'
 import Button from "@ui/shared/button";
 
 export const Root = styled('footer')`
-  height: 40px;
   flex-shrink: 0;
   display: flex;
-  padding: 4px 10px 8px;
+  flex-direction: column;
   font-size: 12px;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors._primary.fade(0.7).string()};
   user-select: none;
   z-index: 1;
 
-  background-color: ${({ theme }) =>
+  background-color: ${({theme}) =>
     theme.colors._background
-      .fade(0.9)
-      .darken(0.7)
-      .string()};
+      .darken(0.5)
+      .string()
+  };
   box-shadow: 0px 0px 27px 15px
     ${({ theme }) =>
       theme.colors._background
@@ -50,34 +48,96 @@ export const Settings = styled(Icon)`
     )}")`};
 `
 
-export const Developers = styled('div')`
-  display: flex;
-  flex-grow: 1;
+interface UserContainerProps {
+  loggedIn: boolean;
+  customAuth: boolean;
+}
+export const UserContainer = styled.div<UserContainerProps>`
+  display: ${({ theme, loggedIn, customAuth }) => ((theme.readonly || customAuth) && !loggedIn) ? 'none' : 'unset'};
+  padding: 8px 10px;
+
+  background-color: ${({theme}) =>
+    theme.colors._background
+      .darken(0.3)
+      .string()};
 `
 
-export const Developer = styled('img')`
-  cursor: pointer;
-  height: 20px;
-  width: 20px;
-  margin: 0 4px;
-  opacity: 0.8;
-  transition: opacity 0.2s ease, transform 0.3s ease;
-  -webkit-user-drag: none;
+export const LoggedInUser = styled('div')`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  gap: 8px;
+`
 
+export const UserTag = styled('div')`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+`
+
+export const Username = styled('div')`
+  font-size: 14px;
+`
+
+export const Discriminator = styled('div')`
+  font-size: 12px;
+  text-transform: uppercase;
+  color: ${({ theme }) =>
+    theme.colors._primary
+      .fade(0.7)
+      .string()
+  };
+`
+
+export const Avatar = styled('img')`
+  border-radius: 100%;
+  height: 32px;
+  width: 32px;
+`
+
+export const UserButtons = styled('div')`
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+`
+
+export const UserButton = styled('div')`
+  padding: 7px;
+  cursor: pointer;
+  border-radius: 4px;
+  
   &:hover {
-    opacity: 1;
-    transform: scale(1.2) rotate(-5deg);
+    background-color: ${({ theme }) =>
+      theme.colors._primary
+        .fade(0.9)
+        .string()
+    };
   }
+`;
+
+export const SettingsIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' aria-hidden='false' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='${({theme}) => encodeURIComponent(theme.colors._primary.fade(0.335).string())}' fill-rule='evenodd' clip-rule='evenodd' d='M19.738 10H22V14H19.739C19.498 14.931 19.1 15.798 18.565 16.564L20 18L18 20L16.565 18.564C15.797 19.099 14.932 19.498 14 19.738V22H10V19.738C9.069 19.498 8.203 19.099 7.436 18.564L6 20L4 18L5.436 16.564C4.901 15.799 4.502 14.932 4.262 14H2V10H4.262C4.502 9.068 4.9 8.202 5.436 7.436L4 6L6 4L7.436 5.436C8.202 4.9 9.068 4.502 10 4.262V2H14V4.261C14.932 4.502 15.797 4.9 16.565 5.435L18 3.999L20 5.999L18.564 7.436C19.099 8.202 19.498 9.069 19.738 10ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z'%3E%3C/path%3E%3C/svg%3E");
+`
+
+export const LogOutIcon = styled('div')`
+  width: 12px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='14' viewBox='0 0 12 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.5 13.9868C10.433 13.9868 12 12.4198 12 10.4868L12 3.51316C12 1.58016 10.433 0.0131626 8.5 0.0131626L0.815789 0.0131626V1.01316L8.5 1.01316C9.88071 1.01316 11 2.13245 11 3.51316L11 10.4868C11 11.8676 9.88071 12.9868 8.5 12.9868L0.815789 12.9868V13.9868L8.5 13.9868ZM8.41934 6.64644L5.74829 3.97539L5.04118 4.6825L6.85868 6.5L1 6.5L1 7.5L6.85868 7.5L5.04118 9.3175L5.74829 10.0246L8.41934 7.35355L8.77289 7L8.41934 6.64644Z' fill='${({theme}) => encodeURIComponent(theme.colors._primary.fade(0.335).string())}'/%3E%3C/svg%3E%0A");
 `
 
 export const Version = styled('a')`
-  color: inherit;
+  width: fit-content;
+  color: ${({ theme }) => theme.colors._primary.fade(0.7).string()};
   line-height: 20px;
-  text-align: right;
   padding: 0 10px;
+  margin-bottom: 2px;
   cursor: pointer;
-  text-decoration: none;
   align-self: center;
+  text-decoration: none;
 
   &:hover {
     text-decoration: underline;
@@ -87,6 +147,11 @@ export const Version = styled('a')`
 const AuthButton = Button.withComponent('a');
 
 export const Auth = styled(AuthButton)`
-    display: ${({theme}) => theme.readonly ? 'none' : 'unset'};
-    background: ${({ theme }) => theme.colors._accent.fade(0.6).string()};
+  display: ${({theme}) => theme.readonly ? 'none' : 'unset'};
+  background: ${({ theme }) => theme.colors._accent.fade(0.6).string()};
 `;
+
+export const NotLoggedIn = styled.div`
+  display: flex;
+  justify-content: center;
+`

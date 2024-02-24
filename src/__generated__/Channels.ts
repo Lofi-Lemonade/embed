@@ -14,12 +14,12 @@ export interface Channels_guild_channels_category {
 }
 
 export interface Channels_guild_channels {
-  __typename: "TextChannel";
+  __typename: "AnnouncementChannel" | "ForumChannel" | "TextChannel" | "ThreadChannel" | "VoiceChannel";
   name: string;
   id: string;
   position: number;
-  canSend: boolean;
   nsfw: boolean;
+  canSend: boolean;
   category: Channels_guild_channels_category | null;
 }
 
